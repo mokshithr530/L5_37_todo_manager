@@ -7,3 +7,6 @@ venv/
 .venv/
 env/
 
+# Data runtime output
+tasks.json
+tasks.pkl

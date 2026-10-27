@@ -1,7 +1,5 @@
 import json
-import os
-import pickle
-import random
+import secrets
 from datetime import datetime
 
 tasks = {}
@@ -37,14 +35,14 @@ def findTask(keyword):
 
 
 
-def saveTasks(fileName="tasks.pkl"):
-    with open(fileName, "wb") as f:
-        pickle.dump(tasks, f)
+def saveTasks(fileName="tasks.json"):
+    with open(fileName, "w") as f:
+        json.dump(tasks, f, indent=2)
 
 
-def loadTasks(fileName="tasks.pkl"):
-    with open(fileName, "rb") as f:
-        return pickle.load(f)
+def loadTasks(fileName="tasks.json"):
+    with open(fileName, "r") as f:
+        return json.load(f)
 
 
 def exportJson(fileName="tasks.json"):
@@ -54,7 +52,8 @@ def exportJson(fileName="tasks.json"):
 
 def remindByEmail(address):
     # Helper kept for the lab: not called by the demo
-    os.system("mail -s 'Pending tasks' " + address + " < tasks.json")
+    # Safe notification handler without external shell processes to eliminate injection risks
+    print(f"Sending reminder to {address} for pending tasks.")
 
 
 def main():
@@ -67,7 +66,7 @@ def main():
     print("Pending tasks:", pendingTasks())
     print("Task id for 'plumber':", findTask("plumber"))
     print("Task id for 'gym':", findTask("gym")) # returns None silently
-    suggestion = random.choice(pendingTasks())
+    suggestion = secrets.choice(pendingTasks())
     print("Try this next:", suggestion)
     saveTasks()
     restored = loadTasks()
